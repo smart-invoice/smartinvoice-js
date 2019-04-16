@@ -1,0 +1,33 @@
+[
+    {
+        "scope": "http://localhost:10010",
+        "method": "get",
+        "path": "/api/login?&invitationCode=unittest&userDID=did:sov:1701248245165",
+        "body": "",
+        "status": 200,
+        "response": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTU0Mzk4MDcsInVzZXJESUQiOiJkaWQ6c292OjE3MDEyNDgyNDUxNjUiLCJvcmdESUQiOiJkaWZhY3R1cm8iLCJpbnZpdGF0aW9uQ29kZSI6InVuaXR0ZXN0IiwiaWF0IjoxNTU1NDAzODA3fQ.dN2peuJAJ-kXGB3B0O9Sq0ziif-tgHf_yCPmFyMK7Ac",
+            "message": "success"
+        },
+        "rawHeaders": [
+            "X-Powered-By",
+            "Express",
+            "Access-Control-Allow-Origin",
+            "*",
+            "Access-Control-Allow-Methods",
+            "GET,PUT,POST,DELETE,OPTIONS",
+            "Access-Control-Allow-Headers",
+            "Content-Type,Accept,X-Access-Token,X-Key,Authorization",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Content-Length",
+            "282",
+            "ETag",
+            "W/\"11a-vLcApPY5hCl+Z9OLiib0BT8lmOs\"",
+            "Date",
+            "Tue, 16 Apr 2019 08:36:47 GMT",
+            "Connection",
+            "close"
+        ]
+    }
+]
