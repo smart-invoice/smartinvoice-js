@@ -2,7 +2,7 @@
     {
         "scope": "http://localhost:10010",
         "method": "get",
-        "path": "/api/login?&invitationCode=unittest&userDID=did:sov:1701248245165",
+        "path": "/api/login?&invitationCode=unittest&userDID=did:sov:37118448445165",
         "body": "",
         "status": 401,
         "response": {
@@ -21,11 +21,11 @@
             "Content-Type",
             "application/json; charset=utf-8",
             "Content-Length",
-            "282",
+            "60",
             "ETag",
-            "W/\"11a-vLcApPY5hCl+Z9OLiib0BT8lmOs\"",
+            "W/\"3c-eXWIOQHqYCpsnwhhlHqc3M1CpCw\"",
             "Date",
-            "Tue, 16 Apr 2019 08:36:47 GMT",
+            "Tue, 16 Apr 2019 12:34:27 GMT",
             "Connection",
             "close"
         ]

@@ -12,7 +12,8 @@
   "scripts": {
     "build": "babel src -d lib",
     "lint": "eslint ./src",
-    "test": "nyc mocha --require @babel/register --watch ./test ./"
+    "test": "nyc mocha --require @babel/register --timeout 5000 --watch ./test ./",
+    "testrun": "nyc mocha --timeout 5000 --require @babel/register"
   },
   "repository": {
     "type": "git",

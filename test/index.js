@@ -17,6 +17,25 @@ describe('Constructor', () => {
 });
 
 describe('Identity', () => {
+  beforeEach(() => {
+    sm = new SmartInvoice({
+      host,
+    });
+  });
+
+  it('Should register new identity', () => {
+    const invitationCode = 'unittest';
+    const identity = SmartInvoice.createIdentity();
+    return nockBack('register.json').then(({
+      nockDone,
+    }) => sm.register(identity.encryptionPublicKey, identity.did, invitationCode).then((res) => {
+      expect(res.status).to.be(200);
+    }).then(() => {
+      nockDone();
+    }));
+  });
+
+
   it('Should generate new identity', () => {
     expect(SmartInvoice.createIdentity()).to.have.keys(
       'did',
@@ -25,22 +44,32 @@ describe('Identity', () => {
       'secret',
     );
   });
-  it('Should return new JWT token', (done) => {
+  it('Should return error code when user is not registered', () => {
+    const userDID = 'did:sov:37118448445165';
+    const invitationCode = 'unittest';
+
+    return nockBack('login-fail.json')
+      .then(({
+        nockDone,
+      }) => sm.login(userDID, invitationCode).catch((error) => {
+        expect(error.response.status).to.be(401);
+        expect(error.response.data.message).to.be('User not registered');
+      }).then(() => {
+        nockDone();
+      }));
+  });
+  it('Should return new JWT token', () => {
     const userDID = 'did:sov:1701248245165';
     const invitationCode = 'unittest';
-    const sm = new SmartInvoice({
-      host,
-    });
 
-    nockBack('login.json')
+    return nockBack('login.json')
       .then(({
         nockDone,
       }) => {
-        sm.login(userDID, invitationCode).then((res) => {
+        return sm.login(userDID, invitationCode).then((res) => {
           expect(res.data).to.have.key('token');
         }).catch(() => {}).then(() => {
           nockDone();
-          done();
         });
       });
   });

@@ -74,16 +74,18 @@ export default class SmartInvoice {
     });
   }
 
-  register(apiEndpoint, publicKey, did, invitationCode) {
+  /**
+   * @param {String} userPublicKey User public key
+   * @param {String} userDID User DID (Decentralize Identifier), currently only did:sov is supported
+   * @param {String} invitationCode - Invitation code for joining Pilot network
+   */
+  register(userPublicKey, userDID, invitationCode) {
     let url = this.host;
-    url += '/api/register?';
-    return axios.get(url, {
-      params: {
-        invitationCode,
-        orgEndpoint: apiEndpoint,
-        userDID: did,
-        userPublicKey: publicKey,
-      },
+    url += '/api/register';
+    return axios.post(url, {
+      invitationCode,
+      userDID,
+      userPublicKey,
     });
   }
 }
