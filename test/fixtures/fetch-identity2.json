@@ -2,12 +2,15 @@
     {
         "scope": "http://localhost:10010",
         "method": "get",
-        "path": "/api/login?&invitationCode=unittest&userDID=did:sov:VkVZLvjVCNEdp6w7UKBjtq",
+        "path": "/api/did/did:sov:VkVZLvjVCNEdp6w7UKBjtq",
         "body": "",
         "status": 200,
         "response": {
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTU2MDc1NzQsInVzZXJESUQiOiJkaWQ6c292OlZrVlpMdmpWQ05FZHA2dzdVS0JqdHEiLCJvcmdESUQiOiJhY21lIiwib3JnRW5kcG9pbnQiOiJodHRwOi8vbG9jYWxob3N0OjEwMDEwIiwiaW52aXRhdGlvbkNvZGUiOiJ1bml0dGVzdCIsImlhdCI6MTU1NTU3MTU3NH0.lFFpWlM900hqQQxL1QO7bdmW19YOepHc26XOnKzdypA",
-            "message": "success"
+            "additionalInformation": "{}",
+            "currentClientChannel": "df2-ctx-2019-global",
+            "initalCreationTimeStamp": "Tue Mar 26 2019 10:04:23 GMT+0000 (UTC)",
+            "publicKey": "BBVBrY3oXbnxF6KDKmk7p3qBuj1hbSad9FBihVyci3Uj",
+            "refDID": "null"
         },
         "rawHeaders": [
             "X-Powered-By",
@@ -21,11 +24,11 @@
             "Content-Type",
             "application/json; charset=utf-8",
             "Content-Length",
-            "339",
+            "244",
             "ETag",
-            "W/\"153-Zd+u4kCpSXsWlH5YZTY0ue9MDT8\"",
+            "W/\"f4-lzzLVROBDSbRm6kOEeSoZi1wFdc\"",
             "Date",
-            "Thu, 18 Apr 2019 07:12:54 GMT",
+            "Thu, 18 Apr 2019 11:37:23 GMT",
             "Connection",
             "close"
         ]
