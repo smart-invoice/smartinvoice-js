@@ -5,28 +5,33 @@ import crypto from 'crypto';
 import Base64js from 'base64-js';
 
 /**
- * <p>Get the configuration object.</p>
  *
- * <p>
- * The configuration object is a shared singleton object within the application,
- * attained by calling require('smartinvoice-sdk').
- * </p>
- *
- * <p>
- * Usually you'll specify a CONFIG variable at the top of your .js file
- * for file/module scope. If you want the root of the object, you can do this:
- * </p>
+ * Main SmartInvoice class representing interface to Smart Invoice API endpoint. See below example how to use it:
  * <pre>
- * var SmartInvoice = require('smartinvoice-sdk');
+ *    var identity = SmartInvoice.createIdentity();
+ *    var host = "https://api.difacturo.com"
+ *    var config = { host: host}
+ *    var smartinvoice = SmartInvoice.new(config, identity);
  * </pre>
  *
- *
- * @method constructor
- * @param {String} apiHost The url for the Smart Invoice Api
+ * @constructor
+ * @param {Object} instanceConfig Json object with configuration for new instance
+ * @param {Identity} userIdentity Sovrin identity object generate with createIdentity()
  * @return SmartInvoice {object} - The top level SmartInvoice object
+ * @license MIT
  */
+class SmartInvoice {
+  /**
+   * Generate new DID base identity
+   * It include public and private key. Currently supported only Sovrin but in the feature
+   * this would be extended to other DID Methods.
+   * @static
+   * @return {Object} object including public and private key for the identity.
+   */
+  static createIdentity() {
+    return sovrinDID.gen();
+  }
 
-export default class SmartInvoice {
   constructor(instanceConfig, userIdentity) {
     this.config = instanceConfig;
     this.aesSecret = '';
@@ -41,17 +46,12 @@ export default class SmartInvoice {
   }
 
   /**
-   * Set host for SmartInvoice API
-   * @parma {String} uri URI of the API ednpoint
+   * Set/Get host for SmartInvoice API
    */
   set host(uri) {
     this.config.host = uri;
   }
 
-  /**
-   * Get host uri for SmartInvoice API endpoint
-   * @return {String} Host endpoint URI string
-   */
   get host() {
     if (this.config === undefined || this.config.host === undefined) {
       throw Error('Host is not set check your config');
@@ -59,6 +59,10 @@ export default class SmartInvoice {
     return this.config.host;
   }
 
+  /**
+   * Set/Get Json Web Token which is used to authenticate against endpoint from host variable
+   * @param {String} JWT - json web token
+   */
   set jwt(jwt) {
     this.config.jwt = jwt;
   }
@@ -71,28 +75,8 @@ export default class SmartInvoice {
   }
 
   /**
-   * Generate new DID base identity
-   * It include public and private key. Currently supported only Sovrin but in the feature
-   * this would be extended to other DID Methods.
-   * @return {Object} object including public and private key for the identity.
-   */
-  static createIdentity() {
-    return sovrinDID.gen();
-  }
-
-  fetchIdentityFor(did) {
-    let url = this.host;
-    url += `/api/did/${did}`;
-    return axios.get(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.jwt}`,
-      },
-    });
-  }
-
-  /**
    * Login user and get JWT token for next calls
+   * @async
    * @param  {String} did User DID (Decentralize Identifier), currently only did:sov is supported
    * @param  {String} invitationCode The second number
    * @return {Promise} axios promise and if success Json Web Token (JWT)
@@ -111,7 +95,7 @@ export default class SmartInvoice {
 
   /**
    *  Register new user within DID directory
-   *
+   * @async
    * @param {String} userPublicKey User public key
    * @param {String} userDID User DID (Decentralize Identifier), currently only did:sov is supported
    * @param {String} invitationCode - Invitation code for joining Pilot network
@@ -129,6 +113,7 @@ export default class SmartInvoice {
 
   /**
    * Send document via SmartInvoice platform to the receiver
+   * @async
    * @param {String} receiverDID Decentralize identifier of the receiver
    * @param {File} file Document which should be sent
    * @param {Object} payload Additional information which should be attached to the document
@@ -151,21 +136,10 @@ export default class SmartInvoice {
   }
 
   /**
-   * Private method to upload file to decentralize storage and get DRI
-   * Encrypt document and upload it to decentralize storage.
-   * @param {File} file Document Blob
-   * @return {Promise} axios promies and if success file Store DRI (decentralize resource identifier)
-   */
-  encryptAndUploadDocument(file) {
-    let url = this.host;
-    url += '/api/ddoc/upload';
-    return axios.post(url, {
-      encryptedFile: this.encryptWithAES(file),
-    });
-  }
-
-  /**
-   *
+   * Encrypt transaction payload for given receiver.
+   * In most cases you don't have to use it directly as [sendTo]{@link SmartInvoice#sendTo} is taking care of it.
+   * @async
+   * @ignore
    * @param {String} receiverDID DID of the receiver
    * @param {String} fileStoreDRI File store DRI (Decentralize Resource Identifier) of encrypted document
    * @param {Object} payload JSON object with additional data
@@ -210,6 +184,7 @@ export default class SmartInvoice {
 
   /**
    * Decrypt payload from transaction
+   * @async
    * @param {String} senderDID Sender DID
    * @param {String} encryptedPayload encyprted payload from transaction
    * @return {Object} decrypted payload
@@ -230,7 +205,10 @@ export default class SmartInvoice {
 
   /**
    * Private method for encrypting the document with generated AES key
+   * @private
+   * @ignore
    * @param {File} unencryptedFile File blob to be encrypted
+   * @returns {String} encrypted file
    */
   // eslint-disable-next-line class-methods-use-this
   encryptWithAES(unencryptedFile) {
@@ -245,6 +223,8 @@ export default class SmartInvoice {
   /**
    * Private method for encrypting the document with generated AES key
    * Decrypt give payload with given AES key
+   * @private
+   * @ignore
    * @param {String} encryptedFile Encrypted file
    * @return {String} Decrypted File
    */
@@ -254,4 +234,57 @@ export default class SmartInvoice {
     });
     return bytes.toString(CryptoJS.enc.Utf8);
   }
+
+  /**
+   * Fetch Public information about specific DID
+   * @async
+   * @private
+   * @ignore
+   * @param {String} did - Decentralized Identifier of the user.
+   */
+  fetchIdentityFor(did) {
+    let url = this.host;
+    url += `/api/did/${did}`;
+    return axios.get(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.jwt}`,
+      },
+    });
+  }
+
+  /**
+   * Private method to upload file to decentralize storage and get DRI
+   * Encrypt document and upload it to decentralize storage.
+   * @async
+   * @ignore
+   * @private
+   * @param {File} file Document Blob
+   * @return {Promise} axios promies and if success file Store DRI (decentralize resource identifier)
+   */
+  encryptAndUploadDocument(file) {
+    let url = this.host;
+    url += '/api/ddoc/upload';
+    return axios.post(url, {
+      encryptedFile: this.encryptWithAES(file),
+    });
+  }
 }
+
+/**
+ * <p>SmartInvoice module</p>
+ *
+ * <p>
+ * SmartInvoice module allow you to interact with Smart Invoice network. See documentation for more details.
+ * </p>
+ * To include exported SmartInvoice class do this:
+ * <pre>
+ * import SmartInvoice from 'smartinvoice-sdk';
+ * </pre>
+ * or
+ * <pre>
+ * var SmartInvoice = require('smartinvoice-sdk');
+ * </pre>
+ * @module SmartInvoice
+ */
+module.exports = SmartInvoice;

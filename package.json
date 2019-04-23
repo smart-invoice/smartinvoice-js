@@ -13,7 +13,8 @@
     "build": "babel src -d lib",
     "lint": "eslint ./src",
     "test": "nyc mocha --require @babel/register --timeout 5000 --watch ./test ./",
-    "testrun": "nyc mocha --timeout 5000 --require @babel/register"
+    "testrun": "nyc mocha --timeout 5000 --require @babel/register",
+    "gendoc": "./node_modules/.bin/jsdoc src/index.js README.md"
   },
   "repository": {
     "type": "git",
