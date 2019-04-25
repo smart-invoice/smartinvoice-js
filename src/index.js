@@ -112,6 +112,26 @@ class SmartInvoice {
   }
 
   /**
+   * Allow to fetch document for the user within given time frame.
+   *
+   * @param {Timestamp} startTimestamp Miliseconds since 1900, from when we should get documents
+   * @param {Timestamp} endTimestamp Miliseconds since 1900, until when we should look for documents
+   */
+  fetchDocuments(startTimestamp, endTimestamp) {
+    let url = this.host;
+    url += '/api/ddoc/transactions';
+    return axios.get(url, {
+      params: {
+        startTimestamp,
+        endTimestamp,
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
+  /**
    * Send document via SmartInvoice platform to the receiver
    * @async
    * @param {String} receiverDID Decentralize identifier of the receiver
@@ -137,7 +157,8 @@ class SmartInvoice {
 
   /**
    * Encrypt transaction payload for given receiver.
-   * In most cases you don't have to use it directly as [sendTo]{@link SmartInvoice#sendTo} is taking care of it.
+   * In most cases you don't have to use it directly as
+   * [sendTo]{@link SmartInvoice#sendTo} is taking care of it.
    * @async
    * @ignore
    * @param {String} receiverDID DID of the receiver
@@ -287,4 +308,4 @@ class SmartInvoice {
  * </pre>
  * @module SmartInvoice
  */
-module.exports = SmartInvoice;
+export default SmartInvoice;
