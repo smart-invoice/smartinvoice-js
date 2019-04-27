@@ -10,7 +10,7 @@ import crypto from 'crypto';
  *    var identity = SmartInvoice.createIdentity();
  *    var host = "https://api.difacturo.com"
  *    var config = { host: host}
- *    var smartinvoice = SmartInvoice.new(config, identity);
+ *    var smartinvoice = new SmartInvoice(config, identity);
  * </pre>
  *
  * @constructor
