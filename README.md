@@ -2,6 +2,8 @@
 
 Smart Invoice is a transportation layer which allow participants securely exchange documents between them.
 
+API documentation: https://smart-invoice.github.io/smartinvoice-js/
+
 # How to use it
 
     npm install --save smartinvoice-sdk
