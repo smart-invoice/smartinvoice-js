@@ -2,7 +2,6 @@ import sovrinDID from 'sovrin-did';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import crypto from 'crypto';
-import Base64js from 'base64-js';
 
 /**
  *
@@ -32,7 +31,7 @@ class SmartInvoice {
     return sovrinDID.gen();
   }
 
-  constructor(instanceConfig, userIdentity) {
+  constructor(instanceConfig = {}, userIdentity) {
     this.config = instanceConfig;
     this.aesSecret = '';
     this.aesIv = '';
@@ -42,11 +41,31 @@ class SmartInvoice {
     // Due to the sovrin lib we are using encryption with authentication where
     // we have to pass nonce
     // we would get rid of it as soon as we would find better lib for dealing with ecds keys
-    this.nonce = Base64js.toByteArray('difacturdifacturdifacturdifactur');
+    this.nonce = Buffer.from('difacturdifacturdidifacr', 'ascii');
+
+    this.http = axios.create({});
+    this.http.interceptors.request.use(
+      (config) => {
+        const defaultConfig = config;
+        if (this.jwt) {
+          defaultConfig.headers.Authorization = `Bearer ${this.jwt}`;
+
+          const tokenData = JSON.parse(
+            Buffer.from(this.jwt.split('.')[1], 'base64').toString('binary'),
+          );
+          defaultConfig.baseURL = tokenData.orgEndpoint;
+        }
+        defaultConfig.headers['Content-Type'] = 'application/json';
+        return defaultConfig;
+      },
+      error => Promise.reject(error),
+    );
   }
 
   /**
    * Set/Get host for SmartInvoice API
+   * Host is used only for calls which does not required JWT
+   * For authenticated calls the host is taken by interceptor from JWT
    */
   set host(uri) {
     this.config.host = uri;
@@ -68,9 +87,6 @@ class SmartInvoice {
   }
 
   get jwt() {
-    if (this.config === undefined || this.config.jwt === undefined) {
-      throw Error('JWT not set, check yout configuration');
-    }
     return this.config.jwt;
   }
 
@@ -85,7 +101,7 @@ class SmartInvoice {
     // TODO use identity keys for JWT
     let url = this.host;
     url += '/api/login?';
-    return axios.get(url, {
+    return this.http.get(url, {
       params: {
         invitationCode,
         userDID,
@@ -118,17 +134,29 @@ class SmartInvoice {
    * @param {Timestamp} endTimestamp Miliseconds since 1900, until when we should look for documents
    */
   fetchDocuments(startTimestamp, endTimestamp) {
-    let url = this.host;
-    url += '/api/ddoc/transactions';
-    return axios.get(url, {
+    const url = '/api/ddoc/transactions';
+    return this.http.get(url, {
       params: {
         startTimestamp,
         endTimestamp,
       },
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
+  }
+
+  /**
+   * Forward existing document on the network to given receiver
+   * @async
+   * @param {String} receiverDID Decentralize identifier of the receiver
+   * @param {String} dri Decentralize Resource Identifier of the forwarding file
+   * @param {Object} payload Additional information which should be attached to the document
+   */
+  forwardDocument(receiverDID, dri, payload) {
+    const self = this;
+    self
+      .encryptTransactionPayloadFor(receiverDID, dri, payload)
+      .then((encryptedTransactionPayload) => {
+        self.sendDocument(dri, encryptedTransactionPayload, receiverDID);
+      });
   }
 
   /**
@@ -145,12 +173,7 @@ class SmartInvoice {
       self
         .encryptTransactionPayloadFor(receiverDID, dri, payload)
         .then((encryptedTransactionPayload) => {
-          self.sendTransaction(
-            self,
-            encryptedTransactionPayload.encryptedMessage,
-            encryptedTransactionPayload.encryptedSenderMessage,
-            receiverDID,
-          );
+          self.sendDocument(dri, encryptedTransactionPayload, receiverDID);
         });
     });
   }
@@ -162,11 +185,12 @@ class SmartInvoice {
    * @async
    * @ignore
    * @param {String} receiverDID DID of the receiver
-   * @param {String} fileStoreDRI File store DRI (Decentralize Resource Identifier) of encrypted document
    * @param {Object} payload JSON object with additional data
-   * @return {Promise} promise with success result object with encryptedMessage for sender and recevier
+   * @return {Promise} promise with success result object with encryptedMessage
+   *                   for sender and recevier
    */
-  encryptTransactionPayloadFor(receiverDID, fileStoreDRI, payload) {
+  encryptTransactionPayloadFor(receiverDID, payload) {
+    const self = this;
     const { signKey } = this.identity.secret;
     const userKeyPair = sovrinDID.getKeyPairFromSignKey(signKey);
 
@@ -184,22 +208,23 @@ class SmartInvoice {
 
       const transactionPayload = {
         aes: {
-          aesSecret: this.aesSecret,
-          aesIV: this.aesIv,
+          aesSecret: self.aesSecret,
+          aesIV: self.aesIv,
         },
         payload,
       };
 
       const message = JSON.stringify(transactionPayload);
 
-      const encryptedMessage = sovrinDID.encryptMessage(message, this.nonce, sharedSecret);
+      const encryptedReceiverMessage = sovrinDID.encryptMessage(message, self.nonce, sharedSecret);
 
       const encryptedSenderMessage = sovrinDID.encryptMessage(
         message,
-        this.nonce,
+        self.nonce,
         sharedSecretSender,
       );
-      return { encryptedMessage, encryptedSenderMessage };
+
+      return { encryptedReceiverMessage, encryptedSenderMessage };
     });
   }
 
@@ -207,10 +232,11 @@ class SmartInvoice {
    * Decrypt payload from transaction
    * @async
    * @param {String} senderDID Sender DID
-   * @param {String} encryptedPayload encyprted payload from transaction
+   * @param {String} encryptedPayload encrypted payload from transaction
    * @return {Object} decrypted payload
    */
   decryptTransactionPayload(senderDID, encryptedPayload) {
+    const self = this;
     const { signKey } = this.identity.secret;
     const userKeyPair = sovrinDID.getKeyPairFromSignKey(signKey);
     return this.fetchIdentityFor(senderDID).then((response) => {
@@ -218,9 +244,7 @@ class SmartInvoice {
         response.data.publicKey,
         userKeyPair.secretKey,
       );
-
-      const payloadByteArray = Base64js.toByteArray(encryptedPayload);
-      return sovrinDID.decryptMessage(payloadByteArray, this.nonce, sharedSecret);
+      return sovrinDID.decryptMessage(encryptedPayload, self.nonce, sharedSecret);
     });
   }
 
@@ -264,14 +288,8 @@ class SmartInvoice {
    * @param {String} did - Decentralized Identifier of the user.
    */
   fetchIdentityFor(did) {
-    let url = this.host;
-    url += `/api/did/${did}`;
-    return axios.get(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.jwt}`,
-      },
-    });
+    const url = `/api/did/${did}`;
+    return this.http.get(url, {});
   }
 
   /**
@@ -281,13 +299,44 @@ class SmartInvoice {
    * @ignore
    * @private
    * @param {File} file Document Blob
-   * @return {Promise} axios promies and if success file Store DRI (decentralize resource identifier)
+   * @return {Promise} axios promies and if success file Store DRI
+   *                   (decentralize resource identifier)
    */
   encryptAndUploadDocument(file) {
-    let url = this.host;
-    url += '/api/ddoc/upload';
-    return axios.post(url, {
+    const url = '/api/ddoc/upload';
+    return this.http.post(url, {
       encryptedFile: this.encryptWithAES(file),
+    });
+  }
+
+  /**
+   * Private method to send document to the network
+   * @ignore
+   * @private
+   * @param {String} dri Decentralized Resource Identifier
+   * @param {Object} encryptedPayload Hash with encrypted payload for receiver and sender
+   * @param {String} receiverDID DID of the receiver
+   * @return {Promise} axios promies
+   */
+  sendDocument(dri, encryptedPayload, receiverDID) {
+    const self = this;
+    // TODO check if encryptedPayload is correct
+
+    const encryptedReceiverPayload = Buffer.from(
+      encryptedPayload.encryptedReceiverMessage,
+      'binary',
+    ).toString('base64');
+    const encryptedSenderPayload = Buffer.from(
+      encryptedPayload.encryptedSenderMessage,
+      'binary',
+    ).toString('base64');
+
+    return this.http.post('/api/ddoc', {
+      senderDID: self.identity.did,
+      encryptedReceiverPayload,
+      encryptedSenderPayload,
+      receiverDID,
+      dri,
     });
   }
 }
@@ -296,7 +345,8 @@ class SmartInvoice {
  * <p>SmartInvoice module</p>
  *
  * <p>
- * SmartInvoice module allow you to interact with Smart Invoice network. See documentation for more details.
+ * SmartInvoice module allow you to interact with Smart Invoice network.
+ * See documentation for more details.
  * </p>
  * To include exported SmartInvoice class do this:
  * <pre>

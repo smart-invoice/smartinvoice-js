@@ -143,25 +143,34 @@ describe('Encryption', () => {
     expect(file).to.be(sm.decryptWithAES(encryptedFile));
   });
 
-  it('Should encrypt payload for recevier', () => {
-    const payload = { website: 'https;//payasyouwant.example/user/1234' };
+  it('Should encrypt payload for recevier and send it to the network', () => {
+    const payload = { website: 'https;//payasyouwant.example/user/123' };
     const receiverDID = 'did:sov:VkVZLvjVCNEdp6w7UKBjtq';
-    const fileStoreCID = 'QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u';
-    return nockBack('fetch-identity2.json').then(({ nockDone }) => sm
-      .encryptTransactionPayloadFor(receiverDID, fileStoreCID, payload)
-      .then((encryptedTransactionPayload) => {
-        expect(encryptedTransactionPayload).to.have.keys(
-          'encryptedMessage',
-          'encryptedSenderMessage',
-        );
-        nockBack('fetch-identity.json').then(({ nockDone }) => {
-          sm.decryptTransactionPayload(
-            `did:sov:${sm.identity.did}`,
-            encryptedTransactionPayload,
-          ).then((decryptedPayload) => {
-            nockDone();
-          });
-        });
-      }));
+    const dri = 'QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u';
+
+    return nockBack('fetch-identity2.json').then(({ nockDone }) => sm.encryptTransactionPayloadFor(receiverDID, payload).then((encryptedTransactionPayload) => {
+      expect(encryptedTransactionPayload).to.have.keys(
+        'encryptedReceiverMessage',
+        'encryptedSenderMessage',
+      );
+      return nockBack('fetch-identity.json').then(({ nockDone }) => sm
+        .decryptTransactionPayload(
+          `did:sov:${sm.identity.did}`,
+          encryptedTransactionPayload.encryptedSenderMessage,
+        )
+        .then((decryptedPayload) => {
+          expect(JSON.parse(decryptedPayload)).to.have.keys('aes', 'payload');
+
+          return nockBack('send-document.json').then(({ nockDone }) => sm
+            .sendDocument(dri, encryptedTransactionPayload, receiverDID)
+            .then((response) => {
+              expect(response).to.have.keys('transactionId');
+              nockDone();
+            })
+            .catch((error) => {
+              nockDone(error);
+            }));
+        }));
+    }));
   });
 });
