@@ -16,7 +16,8 @@ import crypto from 'crypto';
  *
  *    var identity = SmartInvoice.createIdentity();
  *    var host = "https://api.difacturo.com"
- *    var config = { host: host}
+ *    var invitationCode = "getitfromus"
+ *    var config = { host: host, invitationCode: invitationCode}
  *    var smartinvoice = new SmartInvoice(config, identity);
  *
  * </pre>
@@ -32,6 +33,13 @@ class SmartInvoice {
    * Generate new DID base identity
    * It include public and private key. Currently supported only Sovrin but in the feature
    * this would be extended to other DID Methods.
+   *
+   * Currently supported confguration:
+   *    {
+   *        host, // host of the api endpoint to which you want to connect
+   *        invitationCode //invitation code required to connect to pilot network
+   *    }
+   *
    * @static
    * @return {Object} object including public and private key for the identity.
    */
@@ -101,11 +109,11 @@ class SmartInvoice {
   /**
    * Login user and get JWT token for next calls
    * @async
-   * @param  {String} invitationCode The second number
    * @return {Promise} axios promise and if success Json Web Token (JWT)
    */
-  login(invitationCode) {
+  login() {
     const userDID = this.identity.did;
+    const { invitationCode } = this.config;
     // TODO use identity keys for JWT
     let url = this.host;
     url += '/api/login?';
