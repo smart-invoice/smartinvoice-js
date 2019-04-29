@@ -12,7 +12,7 @@ nockBack.setMode('record');
 
 describe('Constructor', () => {
   it('Should throw error when host is not set', () => {
-    sm = new SmartInvoice();
+    sm = new SmartInvoice({}, SmartInvoice.createIdentity());
     expect(() => {
       sm.login();
     }).to.throwException(/Host is not set check your config/);
@@ -20,17 +20,21 @@ describe('Constructor', () => {
 });
 
 describe('Identity', () => {
+  const identity = SmartInvoice.createIdentity();
+
   beforeEach(() => {
-    sm = new SmartInvoice({
-      host,
-    });
+    sm = new SmartInvoice(
+      {
+        host,
+      },
+      identity,
+    );
   });
 
   it('Should register new identity', () => {
     const invitationCode = 'unittest';
-    const identity = SmartInvoice.createIdentity();
     return nockBack('register.json').then(({ nockDone }) => sm
-      .register(identity.encryptionPublicKey, identity.did, invitationCode)
+      .register(invitationCode)
       .then((res) => {
         expect(res.status).to.be(200);
       })

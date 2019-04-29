@@ -101,11 +101,11 @@ class SmartInvoice {
   /**
    * Login user and get JWT token for next calls
    * @async
-   * @param  {String} did User DID (Decentralize Identifier), currently only did:sov is supported
    * @param  {String} invitationCode The second number
    * @return {Promise} axios promise and if success Json Web Token (JWT)
    */
-  login(userDID, invitationCode) {
+  login(invitationCode) {
+    const userDID = this.identity.did;
     // TODO use identity keys for JWT
     let url = this.host;
     url += '/api/login?';
@@ -120,13 +120,13 @@ class SmartInvoice {
   /**
    *  Register new user within DID directory
    * @async
-   * @param {String} userPublicKey User public key
-   * @param {String} userDID User DID (Decentralize Identifier), currently only did:sov is supported
    * @param {String} invitationCode - Invitation code for joining Pilot network
    * @return {Promise} axios promise and if success http code 200
    */
-  register(userPublicKey, userDID, invitationCode) {
+  register(invitationCode) {
     let url = this.host;
+    const userDID = this.identity.did;
+    const userPublicKey = this.identity.encryptionPublicKey;
     url += '/api/register';
     return axios.post(url, {
       invitationCode,
