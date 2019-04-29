@@ -14,7 +14,7 @@
     "lint": "eslint ./src",
     "test": "nyc mocha --require @babel/register --timeout 5000 --watch ./test ./",
     "testrun": "nyc mocha --timeout 5000 --require @babel/register",
-    "gendoc": "./node_modules/.bin/jsdoc src/index.js README.md"
+    "gendoc": "jsdoc src/index.js README.md -d docs"
   },
   "repository": {
     "type": "git",
@@ -51,5 +51,10 @@
     "crypto-js": "^3.1.9-1",
     "dotenv": "^7.0.0",
     "sovrin-did": "^1.4.0"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test",
+    "doc": "docs"
   }
 }
