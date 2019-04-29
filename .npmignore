@@ -1,1 +1,9 @@
 src/
+.babelrc
+.eslintrc.yml
+.npm
+.nvmrc
+.travis.yml
+.nyc_output/
+.vscode/
+coverage/
