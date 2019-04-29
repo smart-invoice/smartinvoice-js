@@ -32,10 +32,19 @@
         
             <div class="class-description">Main SmartInvoice class representing interface to Smart Invoice API endpoint. See below example how to use it:
 <pre>
+
+   // ES6 project
+   import SmartInvoice from 'smartinvoice-sdk';
+
+   // or below
+   var SmartInvoice = require("smartinvoice-sdk").default
+
    var identity = SmartInvoice.createIdentity();
    var host = "https://api.difacturo.com"
-   var config = { host: host}
+   var invitationCode = "getitfromus"
+   var config = { host: host, invitationCode: invitationCode}
    var smartinvoice = new SmartInvoice(config, identity);
+
 </pre></div>
         
     
@@ -174,7 +183,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line22">line 22</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line31">line 31</a>
     </li></ul></dd>
     
 
@@ -290,7 +299,7 @@ For authenticated calls the host is taken by interceptor from JWT
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line70">line 70</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line86">line 86</a>
     </li></ul></dd>
     
 
@@ -352,7 +361,7 @@ For authenticated calls the host is taken by interceptor from JWT
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line85">line 85</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line101">line 101</a>
     </li></ul></dd>
     
 
@@ -391,6 +400,12 @@ For authenticated calls the host is taken by interceptor from JWT
     Generate new DID base identity
 It include public and private key. Currently supported only Sovrin but in the feature
 this would be extended to other DID Methods.
+
+Currently supported confguration:
+   {
+       host, // host of the api endpoint to which you want to connect
+       invitationCode //invitation code required to connect to pilot network
+   }
 </div>
 
 
@@ -434,7 +449,7 @@ this would be extended to other DID Methods.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line30">line 30</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line46">line 46</a>
     </li></ul></dd>
     
 
@@ -614,7 +629,7 @@ this would be extended to other DID Methods.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line238">line 238</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line254">line 254</a>
     </li></ul></dd>
     
 
@@ -794,7 +809,7 @@ this would be extended to other DID Methods.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line136">line 136</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line152">line 152</a>
     </li></ul></dd>
     
 
@@ -975,7 +990,7 @@ this would be extended to other DID Methods.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line153">line 153</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line169">line 169</a>
     </li></ul></dd>
     
 
@@ -1009,7 +1024,7 @@ this would be extended to other DID Methods.
     
 
     
-    <h4 class="name" id="login"><span class="type-signature">(async) </span>login<span class="signature">(did, invitationCode)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="login"><span class="type-signature">(async) </span>login<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -1026,78 +1041,6 @@ this would be extended to other DID Methods.
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>did</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">User DID (Decentralize Identifier), currently only did:sov is supported</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>invitationCode</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The second number</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -1133,7 +1076,7 @@ this would be extended to other DID Methods.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line100">line 100</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line114">line 114</a>
     </li></ul></dd>
     
 
@@ -1161,209 +1104,6 @@ this would be extended to other DID Methods.
         
 <div class="param-desc">
     axios promise and if success Json Web Token (JWT)
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="register"><span class="type-signature">(async) </span>register<span class="signature">(userPublicKey, userDID, invitationCode)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Register new user within DID directory
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>userPublicKey</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">User public key</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>userDID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">User DID (Decentralize Identifier), currently only did:sov is supported</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>invitationCode</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Invitation code for joining Pilot network</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line120">line 120</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    axios promise and if success http code 200
 </div>
 
 
@@ -1539,7 +1279,7 @@ this would be extended to other DID Methods.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line169">line 169</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line185">line 185</a>
     </li></ul></dd>
     
 
@@ -1589,7 +1329,7 @@ this would be extended to other DID Methods.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Apr 28 2019 00:47:43 GMT+0200 (GMT+02:00)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Apr 29 2019 11:47:41 GMT+0200 (GMT+02:00)
 </footer>
 
 <script> prettyPrint(); </script>
