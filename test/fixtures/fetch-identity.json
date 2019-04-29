@@ -2,14 +2,14 @@
     {
         "scope": "http://localhost:10010",
         "method": "get",
-        "path": "/api/did/did:sov:LqVJn9uWFSLF7fw5h9vjA4",
+        "path": "/api/did/did:sov:CdQ9A19S6oppr4CYda3M8i",
         "body": "",
         "status": 200,
         "response": {
             "additionalInformation": "{}",
             "currentClientChannel": "df2-ctx-2019-global",
-            "initalCreationTimeStamp": "Thu Apr 18 2019 11:15:48 GMT+0000 (UTC)",
-            "publicKey": "CyekceffS36LguAa6d5PJTFDmQW4C9gSYTSEasefda72",
+            "initalCreationTimeStamp": "Mon Apr 29 2019 09:33:14 GMT+0000 (UTC)",
+            "publicKey": "2vZLop4WEkZAXFHyhvRac1PmnZV7oB6Wz6JmPAVegz6P",
             "refDID": "did:sov:5jqqB6NaFtjSTzS4oBr4ck"
         },
         "rawHeaders": [
@@ -26,9 +26,9 @@
             "Content-Length",
             "270",
             "ETag",
-            "W/\"10e-o5W5qSMY5s9Uw1dn3BsL5ctn80I\"",
+            "W/\"10e-lMfkUavD92mQFCREw1/erapkYUE\"",
             "Date",
-            "Thu, 18 Apr 2019 11:20:03 GMT",
+            "Mon, 29 Apr 2019 09:40:22 GMT",
             "Connection",
             "close"
         ]

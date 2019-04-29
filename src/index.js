@@ -112,35 +112,35 @@ class SmartInvoice {
    * @return {Promise} axios promise and if success Json Web Token (JWT)
    */
   login() {
-    const userDID = this.identity.did;
+    const self = this;
+    const userDID = `did:sov:${this.identity.did}`;
     const { invitationCode } = this.config;
     // TODO use identity keys for JWT
     let url = this.host;
     url += '/api/login?';
-    return this.http.get(url, {
-      params: {
-        invitationCode,
-        userDID,
-      },
-    });
-  }
-
-  /**
-   *  Register new user within DID directory
-   * @async
-   * @param {String} invitationCode - Invitation code for joining Pilot network
-   * @return {Promise} axios promise and if success http code 200
-   */
-  register(invitationCode) {
-    let url = this.host;
-    const userDID = this.identity.did;
-    const userPublicKey = this.identity.encryptionPublicKey;
-    url += '/api/register';
-    return axios.post(url, {
-      invitationCode,
-      userDID,
-      userPublicKey,
-    });
+    return self.http
+      .get(url, {
+        params: {
+          invitationCode,
+          userDID,
+        },
+      })
+      .then((res) => {
+        self.jwt = res.data.token;
+        return new Promise((resolve, reject) => {
+          resolve(res);
+        });
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          // user not reigsterd, try to register
+          self.register().then(() => {
+            // try to login once more
+            self.login();
+          });
+        }
+        return Promise.reject(error.response);
+      });
   }
 
   /**
@@ -261,6 +261,26 @@ class SmartInvoice {
         userKeyPair.secretKey,
       );
       return sovrinDID.decryptMessage(encryptedPayload, self.nonce, sharedSecret);
+    });
+  }
+
+  /**
+   * Private method for registering new user within DID directory.
+   * In the future this would be reposnsibility of the partner.
+   * @async
+   * @ignore
+   * @return {Promise} axios promise and if success http code 200
+   */
+  register() {
+    let url = this.host;
+    const { invitationCode } = this.config;
+    const userDID = `did:sov:${this.identity.did}`;
+    const userPublicKey = this.identity.encryptionPublicKey;
+    url += '/api/register';
+    return axios.post(url, {
+      invitationCode,
+      userDID,
+      userPublicKey,
     });
   }
 

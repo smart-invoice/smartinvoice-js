@@ -2,11 +2,11 @@
     {
         "scope": "http://localhost:10010",
         "method": "get",
-        "path": "/api/login?&invitationCode=unittest&userDID=did:sov:VkVZLvjVCNEdp6w7UKBjtq",
+        "path": "/api/login?&invitationCode=unittest&userDID=did:sov:CdQ9A19S6oppr4CYda3M8i",
         "body": "",
         "status": 200,
         "response": {
-            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTU2MDc1NzQsInVzZXJESUQiOiJkaWQ6c292OlZrVlpMdmpWQ05FZHA2dzdVS0JqdHEiLCJvcmdESUQiOiJhY21lIiwib3JnRW5kcG9pbnQiOiJodHRwOi8vbG9jYWxob3N0OjEwMDEwIiwiaW52aXRhdGlvbkNvZGUiOiJ1bml0dGVzdCIsImlhdCI6MTU1NTU3MTU3NH0.lFFpWlM900hqQQxL1QO7bdmW19YOepHc26XOnKzdypA",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTY1NjY4MjIsInVzZXJESUQiOiJkaWQ6c292OkNkUTlBMTlTNm9wcHI0Q1lkYTNNOGkiLCJvcmdESUQiOiJhY21lIiwib3JnRW5kcG9pbnQiOiJodHRwOi8vbG9jYWxob3N0OjEwMDEwIiwiaW52aXRhdGlvbkNvZGUiOiJ1bml0dGVzdCIsImlhdCI6MTU1NjUzMDgyMn0.Bi6ctxCSbycQcPrlkzBKxKvvv2-OSRamQWRjG8Q1LLA",
             "message": "success"
         },
         "rawHeaders": [
@@ -23,9 +23,9 @@
             "Content-Length",
             "339",
             "ETag",
-            "W/\"153-Zd+u4kCpSXsWlH5YZTY0ue9MDT8\"",
+            "W/\"153-IFyXnlaDj6Hfo/SgchwBppl7V8s\"",
             "Date",
-            "Thu, 18 Apr 2019 07:12:54 GMT",
+            "Mon, 29 Apr 2019 09:40:22 GMT",
             "Connection",
             "close"
         ]

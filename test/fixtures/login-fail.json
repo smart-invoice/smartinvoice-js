@@ -2,12 +2,12 @@
     {
         "scope": "http://localhost:10010",
         "method": "get",
-        "path": "/api/login?&invitationCode=unittest&userDID=did:sov:37118448445165",
+        "path": "/api/login?&invitationCode=unittest&userDID=did:sov:CdQ9A19S6oppr4CYda3M8i",
         "body": "",
-        "status": 401,
+        "status": 200,
         "response": {
-            "message": "User not registered",
-            "success": false
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTY1NjY3NTEsInVzZXJESUQiOiJkaWQ6c292OkNkUTlBMTlTNm9wcHI0Q1lkYTNNOGkiLCJvcmdESUQiOiJhY21lIiwib3JnRW5kcG9pbnQiOiJodHRwOi8vbG9jYWxob3N0OjEwMDEwIiwiaW52aXRhdGlvbkNvZGUiOiJ1bml0dGVzdCIsImlhdCI6MTU1NjUzMDc1MX0.tsd0TwwqvE7obpC8j8sd2Tst6rOv1R49KIybzwH8L1Q",
+            "message": "success"
         },
         "rawHeaders": [
             "X-Powered-By",
@@ -21,11 +21,11 @@
             "Content-Type",
             "application/json; charset=utf-8",
             "Content-Length",
-            "60",
+            "339",
             "ETag",
-            "W/\"3c-eXWIOQHqYCpsnwhhlHqc3M1CpCw\"",
+            "W/\"153-cbytXXteHwUnaXgRVwl5cX2of/g\"",
             "Date",
-            "Tue, 16 Apr 2019 12:34:27 GMT",
+            "Mon, 29 Apr 2019 09:39:11 GMT",
             "Connection",
             "close"
         ]

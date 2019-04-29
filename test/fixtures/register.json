@@ -5,11 +5,11 @@
         "path": "/api/register",
         "body": {
             "invitationCode": "unittest",
-            "userDID": "DJbBsAL2yxRErDtcB25ESX",
-            "userPublicKey": "ACx6w5vz3kynoH9iynndqfzeWTN1d1wcNYABwkEKY6fU"
+            "userDID": "did:sov:CdQ9A19S6oppr4CYda3M8i",
+            "userPublicKey": "2vZLop4WEkZAXFHyhvRac1PmnZV7oB6Wz6JmPAVegz6P"
         },
         "status": 200,
-        "response": "d77dad89ae2acf242626ab4615613fdf48062aae818c76edbf5cf6011d7c2c4b",
+        "response": "",
         "rawHeaders": [
             "X-Powered-By",
             "Express",
@@ -21,14 +21,12 @@
             "Content-Type,Accept,X-Access-Token,X-Key,Authorization",
             "Content-Type",
             "application/json; charset=utf-8",
-            "Content-Length",
-            "66",
-            "ETag",
-            "W/\"42-XqOLmZT/w5Ns40bB8vWic6hHRLk\"",
             "Date",
-            "Thu, 18 Apr 2019 07:24:34 GMT",
+            "Mon, 29 Apr 2019 09:33:17 GMT",
             "Connection",
-            "close"
+            "close",
+            "Content-Length",
+            "0"
         ]
     }
 ]
