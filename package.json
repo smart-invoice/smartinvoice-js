@@ -1,11 +1,11 @@
 {
   "name": "smartinvoice-sdk",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "NodeJS SDK for Smart Invoice Platform",
   "author": "Difacturo GmbH",
   "license": "MIT",
   "homepage": "https://difacturo.com",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "keywords": [
     "smart invoice"
   ],
