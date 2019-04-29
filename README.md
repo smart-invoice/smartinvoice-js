@@ -9,9 +9,13 @@ API documentation: https://smart-invoice.github.io/smartinvoice-js/
     npm install --save smartinvoice-sdk
 
 
-    import SmartInvoice from 'smartinvoice-sdk'
+     // ES6 project
+     import SmartInvoice from 'smartinvoice-sdk';
 
-    var identity = SmartInvoice.createIdentity();
-    var host = "https://api.difacturo.com"
-    var config = { host: host}
-    var smartinvoice = SmartInvoice.new(config, identity);
+     // or below
+     var SmartInvoice = require("smartinvoice-sdk").default
+
+     var identity = SmartInvoice.createIdentity();
+     var host = "https://api.difacturo.com"
+     var config = { host: host}
+     var smartinvoice = new SmartInvoice(config, identity);
