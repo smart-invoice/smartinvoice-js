@@ -5,7 +5,8 @@ import crypto from 'crypto';
 
 /**
  *
- * Main SmartInvoice class representing interface to Smart Invoice API endpoint. See below example how to use it:
+ * Main SmartInvoice class representing interface to Smart Invoice API endpoint.
+ * See below example how to use it:
  * <pre>
  *
  *    // ES6 project
